@@ -1,0 +1,63 @@
+2021-02-19 17:10:28,223 INFO    MainThread:6974 [wandb_setup.py:_flush():70] setting env: {}
+2021-02-19 17:10:28,223 INFO    MainThread:6974 [wandb_setup.py:_flush():70] multiprocessing start_methods=fork,spawn,forkserver, using: spawn
+2021-02-19 17:10:28,223 INFO    MainThread:6974 [wandb_setup.py:_flush():70] setting login settings: {}
+2021-02-19 17:10:28,223 INFO    MainThread:6974 [wandb_setup.py:_flush():70] setting login settings: {'api_key': '235cea581b7242830fb5cee9df68c5e3af9c8e9d'}
+2021-02-19 17:10:28,223 INFO    MainThread:6974 [wandb_setup.py:_flush():70] configuring jupyter hooks <wandb.sdk_py27.wandb_init._WandbInit object at 0x7f41d09b70b8>
+2021-02-19 17:10:28,223 INFO    MainThread:6974 [wandb_init.py:_log_setup():319] Logging user logs to /home/ubuntu/hacking/projects/deep-mediation/deep-mediation/notebooks/wandb/run-20210219_171028-2p4l9n2m/logs/debug.log
+2021-02-19 17:10:28,225 INFO    MainThread:6974 [wandb_init.py:_log_setup():320] Logging internal logs to /home/ubuntu/hacking/projects/deep-mediation/deep-mediation/notebooks/wandb/run-20210219_171028-2p4l9n2m/logs/debug-internal.log
+2021-02-19 17:10:28,225 INFO    MainThread:6974 [wandb_init.py:init():351] calling init triggers
+2021-02-19 17:10:28,225 INFO    MainThread:6974 [wandb_init.py:init():358] wandb.init called with sweep_config: {}
+config: {}
+2021-02-19 17:10:28,225 INFO    MainThread:6974 [wandb_init.py:init():373] re-initializing run, found existing run on stack: uftal07h
+2021-02-19 17:10:28,227 INFO    MainThread:6974 [wandb_run.py:finish():1068] finishing run meet10may/deep-mediation-notebooks/uftal07h
+2021-02-19 17:10:28,228 INFO    MainThread:6974 [wandb_init.py:_jupyter_teardown():250] cleaning up jupyter logic
+2021-02-19 17:10:28,228 INFO    MainThread:6974 [jupyter.py:save_history():208] not saving jupyter history
+2021-02-19 17:10:28,228 INFO    MainThread:6974 [wandb_run.py:_atexit_cleanup():1381] got exitcode: 0
+2021-02-19 17:10:28,229 INFO    MainThread:6974 [wandb_run.py:_restore():1353] restore
+2021-02-19 17:10:28,327 INFO    MainThread:6974 [wandb_run.py:_wait_for_finish():1504] got exit ret: file_counts {
+  wandb_count: 1
+}
+pusher_stats {
+  uploaded_bytes: 908
+  total_bytes: 908
+}
+
+2021-02-19 17:10:30,332 INFO    MainThread:6974 [wandb_run.py:_wait_for_finish():1504] got exit ret: done: true
+exit_result {
+}
+file_counts {
+  wandb_count: 4
+}
+pusher_stats {
+  uploaded_bytes: 3434
+  total_bytes: 3434
+}
+
+2021-02-19 17:10:31,630 INFO    MainThread:6974 [wandb_run.py:_show_files():1726] logging synced files
+2021-02-19 17:10:31,635 INFO    MainThread:6974 [wandb_init.py:init():404] starting backend
+2021-02-19 17:10:31,639 INFO    MainThread:6974 [backend.py:ensure_launched():81] starting backend process...
+2021-02-19 17:10:31,648 INFO    MainThread:6974 [backend.py:ensure_launched():86] started backend process with pid: 7466
+2021-02-19 17:10:31,650 INFO    MainThread:6974 [wandb_init.py:init():413] backend started and connected
+2021-02-19 17:10:31,653 INFO    MainThread:6974 [wandb_init.py:init():436] updated telemetry
+2021-02-19 17:10:31,653 INFO    MainThread:6974 [wandb_init.py:init():459] communicating current version
+2021-02-19 17:10:32,412 INFO    MainThread:6974 [wandb_init.py:init():464] got version response 
+2021-02-19 17:10:32,412 INFO    MainThread:6974 [wandb_init.py:init():472] communicating run to backend with 30 second timeout
+2021-02-19 17:10:32,523 INFO    MainThread:6974 [wandb_init.py:init():495] starting run threads in backend
+2021-02-19 17:10:33,826 INFO    MainThread:6974 [wandb_run.py:_console_start():1411] atexit reg
+2021-02-19 17:10:33,827 INFO    MainThread:6974 [wandb_run.py:_redirect():1274] redirect: SettingsConsole.WRAP
+2021-02-19 17:10:33,827 INFO    MainThread:6974 [wandb_run.py:_redirect():1309] Wrapping output streams.
+2021-02-19 17:10:33,827 INFO    MainThread:6974 [wandb_run.py:_redirect():1325] Redirects installed.
+2021-02-19 17:10:33,827 INFO    MainThread:6974 [wandb_init.py:init():518] run started, returning control to user process
+2021-02-19 17:10:33,845 INFO    MainThread:6974 [wandb_init.py:_jupyter_setup():271] configuring jupyter hooks <wandb.sdk_py27.wandb_init._WandbInit object at 0x7f41b4ba8390>
+2021-02-19 17:10:33,847 INFO    MainThread:6974 [wandb_setup.py:_flush():70] setting env: {}
+2021-02-19 17:10:33,847 INFO    MainThread:6974 [wandb_setup.py:_flush():70] multiprocessing start_methods=fork,spawn,forkserver, using: spawn
+2021-02-19 17:10:33,847 INFO    MainThread:6974 [wandb_setup.py:_flush():70] setting login settings: {}
+2021-02-19 17:10:33,847 INFO    MainThread:6974 [wandb_setup.py:_flush():70] setting login settings: {'api_key': '235cea581b7242830fb5cee9df68c5e3af9c8e9d'}
+2021-02-19 17:10:33,847 INFO    MainThread:6974 [wandb_setup.py:_flush():70] configuring jupyter hooks <wandb.sdk_py27.wandb_init._WandbInit object at 0x7f41d09b70b8>
+2021-02-19 17:10:33,847 INFO    MainThread:6974 [wandb_init.py:_log_setup():319] Logging user logs to /home/ubuntu/hacking/projects/deep-mediation/deep-mediation/notebooks/wandb/run-20210219_171033-g4apbdj1/logs/debug.log
+2021-02-19 17:10:33,847 INFO    MainThread:6974 [wandb_init.py:_log_setup():320] Logging internal logs to /home/ubuntu/hacking/projects/deep-mediation/deep-mediation/notebooks/wandb/run-20210219_171033-g4apbdj1/logs/debug-internal.log
+2021-02-19 17:10:33,848 INFO    MainThread:6974 [wandb_init.py:init():351] calling init triggers
+2021-02-19 17:10:33,848 INFO    MainThread:6974 [wandb_init.py:init():358] wandb.init called with sweep_config: {}
+config: {}
+2021-02-19 17:10:33,848 INFO    MainThread:6974 [wandb_init.py:init():373] re-initializing run, found existing run on stack: 2p4l9n2m
+2021-02-19 17:10:33,849 INFO    MainThread:6974 [wandb_run.py:finish():1068] finishing run meet10may/deep-mediation-notebooks/2p4l9n2m

@@ -19,7 +19,11 @@ from nilearn import plotting
 from scipy.stats import zscore,norm
 from sklearn.datasets import fetch_openml
 mnist_dataset = fetch_openml('mnist_784')
-import build_model
+import build_model,gc
+from keras import backend as K
+from keras.utils import multi_gpu_model
+import tensorflow as tf
+
 
 # import sys
 # sys.path.append('/home/ubuntu/hacking/projects/deep-mediation/dec-2020/keras-vis-master')
@@ -157,19 +161,31 @@ def get_rate_temp_img(dataset,subjs='train_subjs'):
     flat_rate_zs = np.array([item for sublist in rate_zs for item in sublist])
     return rate,np.concatenate(temp),imgs,flat_rate,flat_rate_zs
 
-# def create_empty_df(num_runs,num_iters):
-#     # Creates an empty dataFrame
-#     a = np.empty((num_runs,num_iters))
-#     a[:] = np.nan
-#     dataFrame = None
-#     parameters = ['alpha', 'beta','theta','gamma','delta']
-#     for params in parameters:
-#         iter = ['iter_'+str(i) for i in range(num_iters)]
-#         pdindex = pd.MultiIndex.from_product([[params], iter],
-#                                              names=['parameters', 'runs']) 
-#         frame = pd.DataFrame(a, columns = pdindex,index = range(0,num_runs))
-#         dataFrame = pd.concat([dataFrame,frame],axis=1)
-#     return dataFrame
+def get_studywise_rating(dataset,study_name,compute_zscore=True):
+    rating = []
+    rating_zs = []
+    for i in study_name:
+        rating = rating+ list(dataset[i][0])
+        if compute_zscore:
+            rating_zs = rating_zs+ list(zscore(dataset[i][0])) #compute zscore for every subject
+        else:
+            rating_zs = rating
+    rating = np.array(rating)
+    rating_zs = np.array(rating_zs)
+    return rating,rating_zs
+
+def get_studywise_temp(dataset,study_name,compute_zscore=True):
+    temp = []
+    temp_zs = []
+    for i in study_name:
+        temp = temp+ list(dataset[i][1])
+        if compute_zscore:
+            temp_zs = temp_zs+ list(zscore(dataset[i][1])) #compute zscore for every subject
+        else:
+            temp_zs = temp
+    temp = np.array(temp)
+    temp_zs = np.array(temp_zs)
+    return temp,temp_zs
 
 def create_empty_df(num_runs,num_iters):
     # Creates an empty dataFrame
@@ -192,9 +208,10 @@ def simulate_mediation(df_train,df_test,X_train,X_test,train_params_df,test_para
     """
     
     # Initialize z with some phi
+    ############### STEP-1  ###############
     if use_model!=None:
         model = load_model(use_model)
-        start = int(Path(use_model).stem.split('-')[-1]) 
+        start = int(Path(use_model).stem.split('-')[2]) 
         print("Using already saved model iteration %s..."%start)
         z_train = model.predict(X_train) 
     else:
@@ -208,12 +225,17 @@ def simulate_mediation(df_train,df_test,X_train,X_test,train_params_df,test_para
   
     for i in range(start,iterations):
         print('Starting iteration... %s'%(i+1))
+    
         # Check for directionality
+        ############### STEP-2  ###############
         if np.corrcoef(z_train,df_train.Y)[0,1] < 0:
               z_train = z_train*(-1)
+                
         # Check for scaling issue
+        ############### STEP-3  ###############
         z_train = zscore(z_train)
         
+        ############### STEP-4  ###############
         lm_train = smf.ols(formula='z_train ~ X', data=df_train).fit()
         alpha0_train = lm_train.params.loc['Intercept']
         alph_train = lm_train.params.loc['X']
@@ -223,50 +245,76 @@ def simulate_mediation(df_train,df_test,X_train,X_test,train_params_df,test_para
         bet_train = lm_train.params.z_train
         gam_train = lm_train.params.X
         resid_std_train = np.std(lm_train.resid)
-
+        
+        ############### STEP-5  ###############
         e_train = df_train.Y - beta0_train - (df_train.X*gam_train)
+        
+        ############### STEP-6  ###############
         h_train = alpha0_train + df_train.X*alph_train
+        
+        ############### STEP-7  ###############
         d_train = (((bet_train*e_train)+h_train)/((bet_train**2)+1))
         d_train = np.array(d_train)
         
-        output_file_name = algo+'-iter-'+str(i+1)+'-run-'+str(n_runs)+suffix
+#         output_file_name = algo+'-iter-'+str(i+1)+'-run-'+str(n_runs)+suffix
+        output_model_name = algo+'-iter-'+str(i+1)+'-run-'+str(n_runs)+suffix
         
+        ############### STEP-8  ###############
         if algo == 'svr':
             model = build_model.create_svr_model(X_train,d_train)
             z_train = model.predict(X_train)
         else:
             early = EarlyStopping(monitor='val_loss', patience=pat,mode='min',verbose=1)
-            mc = ModelCheckpoint(filepath=os.path.join(output_path,output_file_name+'.h5'), 
+            mc = ModelCheckpoint(filepath=os.path.join(output_path,output_model_name+'.h5'), 
                              verbose=1, monitor='val_loss',save_best_only=True)
             cb = [early, mc] 
             hist = model.fit(X_train,d_train,batch_size=batchSize,validation_split=0.3,
                                   epochs=nEpochs,verbose=1, shuffle=True,callbacks=cb)
-            z_train = model.predict(X_train)
-            plot_train_loss(hist,os.path.join(output_path,output_file_name+'.png'))
+            
+# load the saved model so that it reads the most latest model
+            
+            model = load_model(os.path.join(output_path,output_model_name+'.h5'))
+            print("######### Computing parameters...############")
+#             z_train = model.predict(X_train)
+#             plot_train_loss(hist,os.path.join(output_path,output_file_name+'.png'))
             
 # Save the params in the pandas dataframe
+        print("Saving as excel file...")
+        alpha0_train,alph_train,beta0_train,bet_train,gam_train,z_train = predict_mediation(model,X_train,df_train)
         train_params_df.loc[n_runs]['alpha0','iter_'+str(i)]=alpha0_train
         train_params_df.loc[n_runs]['beta0','iter_'+str(i)]=beta0_train
         train_params_df.loc[n_runs]['beta','iter_'+str(i)]=bet_train
         train_params_df.loc[n_runs]['gamma','iter_'+str(i)]=gam_train
         train_params_df.loc[n_runs]['alpha','iter_'+str(i)]=alph_train
-        train_params_df.to_excel(os.path.join(output_path,output_file_name+'-train.xlsx'))
+        train_params_df.to_excel(os.path.join(output_path,algo+suffix+'-params-train.xlsx'))
         try:
             z_train = np.concatenate(z_train)
         except:
             pass
-        
         alpha0_test,alph_test,beta0_test,bet_test,gam_test,z_test = predict_mediation(model,X_test,df_test)
-        test_params_df.loc[n_runs]['alpha0','iter_'+str(i)]=alpha0_train
-        test_params_df.loc[n_runs]['beta0','iter_'+str(i)]=beta0_train
-        test_params_df.loc[n_runs]['beta','iter_'+str(i)]=bet_train
-        test_params_df.loc[n_runs]['gamma','iter_'+str(i)]=gam_train
-        test_params_df.loc[n_runs]['alpha','iter_'+str(i)]=alph_train
-        test_params_df.to_excel(os.path.join(output_path,output_file_name+'-test.xlsx'))
+        test_params_df.loc[n_runs]['alpha0','iter_'+str(i)]=alpha0_test
+        test_params_df.loc[n_runs]['beta0','iter_'+str(i)]=beta0_test
+        test_params_df.loc[n_runs]['beta','iter_'+str(i)]=bet_test
+        test_params_df.loc[n_runs]['gamma','iter_'+str(i)]=gam_test
+        test_params_df.loc[n_runs]['alpha','iter_'+str(i)]=alph_test
+        test_params_df.to_excel(os.path.join(output_path,algo+suffix+'-params-test.xlsx'))
+        
+        print("################ Clearing model history ##################")
+        tf.contrib.keras.backend.clear_session()
+        del hist
+        gc.collect()
+        K.clear_session()
+        model = load_model(os.path.join(output_path,output_model_name+'.h5'))
+#         _ = gc.collect()
+#     return train_params_df,test_params_df,model,z_train,z_test
+    return model
+#     return train_params_df,test_params_df,z_train
 
-    return train_params_df,test_params_df,z_train
-
-def predict_mediation(model,test_imgs,df_test):
+def predict_mediation(model,test_imgs,df_test,ngpus=2):
+    
+    if ngpus > 1:
+        model = multi_gpu_model(model,gpus=ngpus)
+            
     z_test = model.predict(test_imgs)
     try:
         z_test = np.concatenate(z_test)

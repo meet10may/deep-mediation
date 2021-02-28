@@ -1,0 +1,26 @@
+{
+    "python": "3.5.6",
+    "docker": null,
+    "gpu": "Tesla V100-SXM2-16GB",
+    "state": "running",
+    "gpu_count": 2,
+    "program": "<python with no main file>",
+    "username": "ubuntu",
+    "cuda": "9.0.176",
+    "heartbeatAt": "2021-02-19T17:10:39.407019",
+    "args": [
+        "-f",
+        "/home/ubuntu/.local/share/jupyter/runtime/kernel-df22a948-29a3-4b1f-8556-6dec3dee5aaf.json"
+    ],
+    "os": "Linux-4.15.0-1064-oracle-x86_64-with-debian-stretch-sid",
+    "executable": "/home/ubuntu/anaconda3/envs/myclone/bin/python",
+    "git": {
+        "remote": "https://github.com/meet10may/deep-mediation.git",
+        "commit": "a17cf97cff524dbd7d887b7c92daa307ad99dfdd"
+    },
+    "host": "instance-20210218-1922",
+    "cpu_count": 24,
+    "email": "meet10may@gmail.com",
+    "startedAt": "2021-02-19T17:10:33.844435",
+    "root": "/home/ubuntu/hacking/projects/deep-mediation/deep-mediation"
+}

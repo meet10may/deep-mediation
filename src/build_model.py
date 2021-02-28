@@ -53,18 +53,107 @@ def create_shallow_model3D(input_shape):
     hyperparams: a dictionary of hyperparameters with a list of variables as the values
 
     """
-    model = Sequential()
-    model.add(Conv3D(32, kernel_size=(3, 3, 3),activation='relu',input_shape=(input_shape)))
-    model.add(Conv3D(64, (3, 3, 3), activation='relu'))
-    model.add(MaxPooling3D(pool_size=(2, 2)))
-    model.add(Dropout(0.25))
-    model.add(Flatten())
-    model.add(Dense(128, activation='relu'))
-    model.add(Dropout(0.5))
-    model.add(Dense(1, activation=None))
+    X_input = Input(input_shape,name='Allimages')
+#     model = Sequential()
+    X = Conv3D(8, kernel_size=(9, 9, 9),strides=(1,1,1),padding='valid',activation='relu',input_shape=(input_shape))(X_input)
+    X = MaxPooling3D(pool_size=(2, 2, 2),strides=(2, 2, 2))(X)
+    X = Conv3D(8, kernel_size=(7, 7, 7),strides=(1,1,1),padding='valid',activation='relu',input_shape=(input_shape))(X)
+    X = MaxPooling3D(pool_size=(2, 2, 2),strides=(2, 2, 2))(X)
+    X = Conv3D(16, (5, 5, 5), strides=(1,1,1),padding='valid',activation='relu')(X)
+    X = MaxPooling3D(pool_size=(2, 2, 2),strides=(2, 2, 2))(X)
+    X = Conv3D(32, (3, 3, 3), strides=(1,1,1),padding='valid',activation='relu')(X)
+    X = MaxPooling3D(pool_size=(2, 2, 2),strides=(2, 2, 2))(X)
+    X = Flatten()(X)
+    X = Dense(128, activation='relu')(X)
+    X = Dropout(0.5)(X)
+    prediction = Dense(1, activation=None)(X)
+    model = Model(inputs = X_input, outputs = prediction)
     model.compile(loss=keras.losses.mean_squared_error,optimizer=keras.optimizers.Adam(),metrics=['mse'])
     return model
 
+# def create_shallow_model3D(input_shape):
+#     """
+#     Implementation of the residual block from the nature paper https://www.nature.com/articles/s41467-019-13163-9.pdf
+#     # The only difference is the input shape and Batchnormalization layer is used instead of batchrenormalization layers
+
+#     Arguments:
+#     X -- input tensor of shape (m, H, W, D, C)
+
+#     Returns:
+#     model
+#     """
+
+#     X_input = Input(input_shape,name='Allimages')
+
+#     ##### MAIN PATH #####
+
+#     # First component of main path
+#     regAmount = 0.00005
+#     initType='he_uniform'
+#     paddingType = 'same'
+#     X = Conv3D(filters = 8, kernel_size = (3, 3, 3), padding=paddingType,kernel_regularizer=regularizers.l2(regAmount),
+#                                                       kernel_initializer=initType)(X_input)
+#     X = BatchNormalization(axis = -1)(X)#, trainable=True)(X)
+#     #X = BatchRenormalization(axis = -1)(X)
+#     #X.trainable=True
+#     X = Activation('elu')(X)
+#     X = Conv3D(filters = 8, kernel_size = (3, 3, 3), strides=(1,1,1), padding=paddingType,kernel_regularizer=regularizers.l2(regAmount),
+#                                                       kernel_initializer=initType)(X)
+#     X = BatchNormalization(axis = -1)(X)
+#     #X = Activation('elu')(X)
+
+#     X_shortcut = Conv3D(8, kernel_size = (1,1,1), strides=(1,1,1), padding=paddingType,kernel_initializer=initType)(X_input)
+#     X = Add()([X_shortcut,X])
+#     outputs = Activation('elu')(X)
+
+#     pooling = MaxPooling3D(pool_size=(2,2,2),strides=(2,2,2), padding=paddingType)(outputs)
+
+
+#    #######################################################################################################################
+
+#     inputs = pooling
+#     features = 16
+#     hidden = Conv3D(features, (3, 3, 3), padding=paddingType,kernel_regularizer=regularizers.l2(regAmount),kernel_initializer=initType)(inputs)
+#     hidden = BatchNormalization(axis=-1)(hidden)
+#     hidden = Activation('elu')(hidden)
+
+#     hidden = Conv3D(features, (3, 3, 3), padding=paddingType,kernel_regularizer=regularizers.l2(regAmount),kernel_initializer=initType)(hidden)
+#     hidden = BatchNormalization(axis=-1)(hidden)
+
+#     shortcut = Conv3D(features, (1,1,1), strides=(1,1,1), padding=paddingType,kernel_initializer=initType)(inputs)
+#     hidden = Add()([shortcut,hidden])
+#     outputs = Activation('elu')(hidden)
+
+#     pooling = MaxPooling3D(pool_size=(2,2,2),strides=(2,2,2), padding=paddingType)(outputs)
+    
+# ########################################################################################################################
+#     inputs = pooling
+#     features = 32
+#     hidden = Conv3D(features, (3, 3, 3), padding=paddingType,kernel_regularizer=regularizers.l2(regAmount),kernel_initializer=initType)(inputs)
+#     hidden = BatchNormalization(axis=-1)(hidden)
+#     hidden = Activation('elu')(hidden)
+
+#     hidden = Conv3D(features, (3, 3, 3), padding=paddingType,kernel_regularizer=regularizers.l2(regAmount),kernel_initializer=initType)(hidden)
+#     hidden = BatchNormalization(axis=-1)(hidden)
+
+#     shortcut = Conv3D(features, (1,1,1), strides=(1,1,1), padding=paddingType,kernel_initializer=initType)(inputs)
+#     hidden = Add()([shortcut,hidden])
+#     outputs = Activation('elu')(hidden)
+
+#     pooling = MaxPooling3D(pool_size=(2,2,2),strides=(2,2,2), padding=paddingType)(outputs)
+
+#    ##########################################################################################################################
+#     hidden = Flatten()(pooling)
+#     hidden = Dense(128,kernel_regularizer=regularizers.l2(regAmount),kernel_initializer=initType,name='FullyConnectedLayer')(hidden)
+#     hidden = Activation('elu')(hidden)
+#     hidden = Dropout(0.8)(hidden)#, training=True) # dropout layer was not used during testing, so had to add this,check https://github.com/keras-team/keras/issues/9412
+
+#     prediction = Dense(1,kernel_regularizer=regularizers.l2(regAmount), name='PainPrediction')(hidden)
+
+#     model = Model(inputs = X_input, outputs = prediction)
+#     opt = Adam(lr=0.001, beta_1=0.9, beta_2=0.999,decay=0.01)
+#     model.compile(loss='mean_absolute_error',optimizer=opt)
+#     return model
 
 def create_svr_model(M,d):
     svr = SVR()
@@ -188,6 +277,8 @@ def create_deep_model3D(input_shape):
     prediction = Dense(1,kernel_regularizer=regularizers.l2(regAmount), name='PainPrediction')(hidden)
 
     model = Model(inputs = X_input, outputs = prediction)
+    opt = Adam(lr=0.001, beta_1=0.9, beta_2=0.999,decay=0.01)
+    model.compile(loss='mean_absolute_error',optimizer=opt)
     return model
 
 def create_deep_model2D(input_shape):

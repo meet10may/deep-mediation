@@ -33,12 +33,13 @@ def generate_dataset(data_path,test_data_size=0.30):
             data = [os.path.join(data_path,'BMRK3'+'_data','bmrk3_st_'+s+'_zs.nii') for s in data_info.subjects[2]]
         else:
             data = glob.glob(os.path.join(i,'*zs.nii')) 
-            data.sort(key=lambda f: int(''.join(filter(str.isdigit, f))))
+        data.sort(key=lambda f: int(''.join(filter(str.isdigit, f))))
         imgs = imgs+data
 
     test_data = [os.path.join(data_path,'BMRK5_data',s.replace('sub','stim_bmrk5_S')+'*zs.nii') for s in sum(data_info.subjects[-2], [])]
     test_data = [glob.glob(i) for i in test_data]
     test_data = sum(test_data,[])
+    test_data.sort(key=lambda f: int(''.join(filter(str.isdigit, f))))
 
     dataset= {}
     NSF = {}

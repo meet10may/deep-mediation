@@ -1,0 +1,62 @@
+2021-02-19 17:11:02,224 INFO    MainThread:6974 [wandb_setup.py:_flush():70] setting env: {}
+2021-02-19 17:11:02,225 INFO    MainThread:6974 [wandb_setup.py:_flush():70] multiprocessing start_methods=fork,spawn,forkserver, using: spawn
+2021-02-19 17:11:02,225 INFO    MainThread:6974 [wandb_setup.py:_flush():70] setting login settings: {}
+2021-02-19 17:11:02,225 INFO    MainThread:6974 [wandb_setup.py:_flush():70] setting login settings: {'api_key': '235cea581b7242830fb5cee9df68c5e3af9c8e9d'}
+2021-02-19 17:11:02,225 INFO    MainThread:6974 [wandb_setup.py:_flush():70] configuring jupyter hooks <wandb.sdk_py27.wandb_init._WandbInit object at 0x7f41d09b70b8>
+2021-02-19 17:11:02,225 INFO    MainThread:6974 [wandb_init.py:_log_setup():319] Logging user logs to /home/ubuntu/hacking/projects/deep-mediation/deep-mediation/notebooks/wandb/run-20210219_171102-19k6040g/logs/debug.log
+2021-02-19 17:11:02,225 INFO    MainThread:6974 [wandb_init.py:_log_setup():320] Logging internal logs to /home/ubuntu/hacking/projects/deep-mediation/deep-mediation/notebooks/wandb/run-20210219_171102-19k6040g/logs/debug-internal.log
+2021-02-19 17:11:02,225 INFO    MainThread:6974 [wandb_init.py:init():351] calling init triggers
+2021-02-19 17:11:02,226 INFO    MainThread:6974 [wandb_init.py:init():358] wandb.init called with sweep_config: {}
+config: {}
+2021-02-19 17:11:02,226 INFO    MainThread:6974 [wandb_init.py:init():373] re-initializing run, found existing run on stack: 2438rt7t
+2021-02-19 17:11:02,228 INFO    MainThread:6974 [wandb_run.py:finish():1068] finishing run meet10may/deep-mediation-notebooks/2438rt7t
+2021-02-19 17:11:02,228 INFO    MainThread:6974 [wandb_init.py:_jupyter_teardown():250] cleaning up jupyter logic
+2021-02-19 17:11:02,228 INFO    MainThread:6974 [jupyter.py:save_history():208] not saving jupyter history
+2021-02-19 17:11:02,228 INFO    MainThread:6974 [wandb_run.py:_atexit_cleanup():1381] got exitcode: 0
+2021-02-19 17:11:02,229 INFO    MainThread:6974 [wandb_run.py:_restore():1353] restore
+2021-02-19 17:11:02,390 INFO    MainThread:6974 [wandb_run.py:_wait_for_finish():1504] got exit ret: file_counts {
+  wandb_count: 1
+}
+pusher_stats {
+  uploaded_bytes: 908
+  total_bytes: 908
+}
+
+2021-02-19 17:11:04,394 INFO    MainThread:6974 [wandb_run.py:_wait_for_finish():1504] got exit ret: done: true
+exit_result {
+}
+file_counts {
+  wandb_count: 4
+}
+pusher_stats {
+  uploaded_bytes: 3434
+  total_bytes: 3434
+}
+
+2021-02-19 17:11:05,684 INFO    MainThread:6974 [wandb_run.py:_show_files():1726] logging synced files
+2021-02-19 17:11:05,689 INFO    MainThread:6974 [wandb_init.py:init():404] starting backend
+2021-02-19 17:11:05,693 INFO    MainThread:6974 [backend.py:ensure_launched():81] starting backend process...
+2021-02-19 17:11:05,702 INFO    MainThread:6974 [backend.py:ensure_launched():86] started backend process with pid: 7922
+2021-02-19 17:11:05,704 INFO    MainThread:6974 [wandb_init.py:init():413] backend started and connected
+2021-02-19 17:11:05,707 INFO    MainThread:6974 [wandb_init.py:init():436] updated telemetry
+2021-02-19 17:11:05,708 INFO    MainThread:6974 [wandb_init.py:init():459] communicating current version
+2021-02-19 17:11:06,488 INFO    MainThread:6974 [wandb_init.py:init():464] got version response 
+2021-02-19 17:11:06,488 INFO    MainThread:6974 [wandb_init.py:init():472] communicating run to backend with 30 second timeout
+2021-02-19 17:11:06,616 INFO    MainThread:6974 [wandb_init.py:init():495] starting run threads in backend
+2021-02-19 17:11:07,191 WARNING MainThread:6974 [wandb_init.py:init():739] interrupted
+Traceback (most recent call last):
+  File "/home/ubuntu/anaconda3/envs/myclone/lib/python3.5/site-packages/wandb/sdk_py27/wandb_init.py", line 719, in init
+    run = wi.init()
+  File "/home/ubuntu/anaconda3/envs/myclone/lib/python3.5/site-packages/wandb/sdk_py27/wandb_init.py", line 498, in init
+    _ = backend.interface.communicate_run_start(run_obj)
+  File "/home/ubuntu/anaconda3/envs/myclone/lib/python3.5/site-packages/wandb/sdk_py27/interface/interface.py", line 739, in communicate_run_start
+    result = self._communicate(rec)
+  File "/home/ubuntu/anaconda3/envs/myclone/lib/python3.5/site-packages/wandb/sdk_py27/interface/interface.py", line 522, in _communicate
+    f = future.get(timeout)
+  File "/home/ubuntu/anaconda3/envs/myclone/lib/python3.5/site-packages/wandb/sdk_py27/interface/interface.py", line 81, in get
+    is_set = self._object_ready.wait(timeout)
+  File "/home/ubuntu/anaconda3/envs/myclone/lib/python3.5/threading.py", line 549, in wait
+    signaled = self._cond.wait(timeout)
+  File "/home/ubuntu/anaconda3/envs/myclone/lib/python3.5/threading.py", line 297, in wait
+    gotit = waiter.acquire(True, timeout)
+KeyboardInterrupt
